@@ -24,7 +24,7 @@ export default function ChatListUser() {
 						<Link
 							preserveScroll
 							key={user.id}
-							href=""
+							href={route('chat.show', user.id)}
 							className={clsx(
 								user.id === chatWithUser?.id ? 'bg-gray-800' : 'bg-transparent',
 								'flex w-full items-center hover:bg-gray-800/60 px-2.5 py-3 rounded-md'
