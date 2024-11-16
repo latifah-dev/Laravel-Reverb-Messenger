@@ -20,7 +20,7 @@ class MessageController extends Controller
 
     public function show(User $user): Response
     {
-        // dd($this->getMessages($user));
+        
         return inertia('Chat/Show', [
             'users' => $this->getUser(),
             'chat_with' => $user,
@@ -77,8 +77,42 @@ class MessageController extends Controller
         return $messages;
     }
 
-    private function getUser() {
-        return User::query()->where('id','!=', auth()->user()->id)
-        ->get();
+    private function getUser()
+    {
+        return User::query()
+                ->whereHas('sendMessages', function($query){
+                    $query->where('receiver_id', auth()->user()->id);
+                })
+                ->orWhereHas('receiveMessages', function($query){
+                    $query->where('sender_id', auth()->user()->id);
+                })
+                ->withCount(['sendMessages' => fn($query) => $query->where('receiver_id', auth()->id())->whereNull('seen_at')])
+                ->with([
+                    'sendMessages' => function ($query) {
+                        $query->whereIn('id', function ($query) {
+                            $query->selectRaw('max(id)')
+                                ->from('messages')
+                                ->where('receiver_id', auth()->id())
+                                ->groupBy('sender_id');
+                        });
+                    },
+                    'receiveMessages' => function ($query) {
+                        $query->whereIn('id', function ($query) {
+                            $query->selectRaw('max(id)')
+                                ->from('messages')
+                                ->where('sender_id', auth()->id())
+                                ->groupBy('receiver_id');
+                        });
+                    },
+                ])
+                ->orderByDesc(function ($query) {
+                    $query->select('created_at')
+                        ->from('messages')
+                        ->whereColumn('sender_id', 'users.id')
+                        ->orWhereColumn('receiver_id', 'users.id')
+                        ->orderByDesc('created_at')
+                        ->limit(1);
+                })
+                ->get();
     }
 }

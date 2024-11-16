@@ -1,5 +1,5 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react'
-import { Combobox, Dialog, Transition } from '@headlessui/react'
+import { Combobox, Dialog, DialogBackdrop, Transition } from '@headlessui/react'
 import { MagnifyingGlassIcon, UserCircleIcon } from '@heroicons/react/24/outline/index.js'
 import clsx from 'clsx'
 import { Link } from '@inertiajs/react'
@@ -17,10 +17,10 @@ export default function SearchChatBar() {
 			await axios('/api/users/search', {
 				method: 'GET',
 				params: {
-					q: query
+					query: query
 				}
 			}).then((res) => {
-				setUsers(res?.data?.data)
+				setUsers(res?.data?.users)
 				setLoading(false)
 			})
 		}, 500),
@@ -83,7 +83,7 @@ export default function SearchChatBar() {
 						leaveFrom='opacity-100'
 						leaveTo='opacity-0'
 					>
-						<Dialog.Overlay className='fixed inset-0 transition-opacity bg-gray-500 bg-opacity-25' />
+						<div className='fixed inset-0 transition-opacity bg-gray-500 bg-opacity-25' />
 					</Transition.Child>
 
 					<Transition.Child
