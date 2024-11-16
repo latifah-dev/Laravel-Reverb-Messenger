@@ -34,7 +34,7 @@ export default function ({ children }) {
 						<div className='flex h-full overflow-hidden border border-gray-700 rounded-lg shadow'>
 							<div className={renderSidebarScreen()}>
 								<MineProfileChat auth={auth} />
-								{/* <SearchChatBar /> */}
+								<SearchChatBar />
 								<ChatListUser />
 							</div>
 

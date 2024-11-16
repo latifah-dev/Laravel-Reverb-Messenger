@@ -1,3 +1,5 @@
+//resources\js\Components\ChatListUser.jsx
+
 import React from 'react'
 import { Link, usePage } from '@inertiajs/react'
 import ProfilePictureOnChat from '@/Components/ProfilePictureOnChat.jsx'
@@ -10,10 +12,11 @@ export default function ChatListUser() {
 	return (
 		<>
 			<div className='flex-1 mt-3 overflow-y-auto' scroll-region='true'>
-				{users?.map((user) => {
+				{users.map((user) => {
 					let chat = null
-					const receiveMessage = user?.receive_messages?.length > 0 && user?.receive_messages[0]
-					const sendMessage = user?.send_messages?.length > 0 && user?.send_messages[0]
+					const receiveMessage = user?.receive_message?.length > 0 && user?.receive_message[0]
+					const sendMessage = user?.send_message?.length > 0 && user?.send_message[0]
+					console.log('user', user)
 
 					if (receiveMessage && sendMessage)
 						chat = receiveMessage?.id > sendMessage?.id ? receiveMessage : sendMessage
@@ -24,7 +27,7 @@ export default function ChatListUser() {
 						<Link
 							preserveScroll
 							key={user.id}
-							href={route('chat.show', user.id)}
+							href={route('chat.show', user)}
 							className={clsx(
 								user.id === chatWithUser?.id ? 'bg-gray-800' : 'bg-transparent',
 								'flex w-full items-center hover:bg-gray-800/60 px-2.5 py-3 rounded-md'
@@ -79,9 +82,9 @@ export default function ChatListUser() {
 											</div>
 										)}
 									</div>
-									{user.messages_count > 0 && (
+									{user.send_message_count > 0 && (
 										<div className='inline-flex items-center px-1.5 rounded-full text-[10px] bg-purple-500 text-white'>
-											{user.messages_count}
+											{user.send_message_count}
 										</div>
 									)}
 								</div>

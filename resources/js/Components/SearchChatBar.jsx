@@ -20,7 +20,7 @@ export default function SearchChatBar() {
 					q: query
 				}
 			}).then((res) => {
-				setUsers(res?.data?.data)
+				setUsers(res?.data?.users)
 				setLoading(false)
 			})
 		}, 500),
