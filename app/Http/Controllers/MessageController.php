@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Message;
 use App\Models\User;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Response;
+use App\Models\Message;
+use App\Events\MessageSent;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 
 class MessageController extends Controller
 {
@@ -36,6 +37,8 @@ class MessageController extends Controller
             'receiver_id' => $user->id,
             'reply_id' => $request->reply_id
         ]);
+
+        broadcast(new MessageSent($request->message))->toOthers();
 
         return back();
     }

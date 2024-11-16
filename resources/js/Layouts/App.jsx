@@ -1,11 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import MineProfileChat from '@/Components/MineProfileChat.jsx'
 import SearchChatBar from '@/Components/SearchChatBar.jsx'
 import ChatListUser from '@/Components/ChatListUser.jsx'
 import { usePage } from '@inertiajs/react'
+import { router } from '@inertiajs/react'
 
 export default function ({ children }) {
-	const { auth } = usePage().props
+    const { auth } = usePage().props
+	useEffect(() => {
+		Echo.channel('message-sent-channel').listen('MessageSent', (e) => {
+			router.reload({
+				preserveScroll : true,
+				only : ['messages']
+			})
+		})
+	})
 
 	const renderSidebarScreen = () => {
 		const currentPath = route().current()
@@ -25,7 +34,7 @@ export default function ({ children }) {
 						<div className='flex h-full overflow-hidden border border-gray-700 rounded-lg shadow'>
 							<div className={renderSidebarScreen()}>
 								<MineProfileChat auth={auth} />
-								<SearchChatBar />
+								{/* <SearchChatBar /> */}
 								<ChatListUser />
 							</div>
 

@@ -36,7 +36,10 @@ export default function ChatInputMessage(props) {
 				props.setReply(null)
 				props.setIsTyping(false)
 			},
-			preserveScroll: true
+			preserveScroll: true,
+			headers: {
+				'X-Socket-Id': Echo.socketId()
+			},
 		})
 	}
 
