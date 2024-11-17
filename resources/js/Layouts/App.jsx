@@ -8,13 +8,13 @@ import { router } from '@inertiajs/react'
 export default function ({ children }) {
     const { auth } = usePage().props
 	useEffect(() => {
-		Echo.channel('message-sent-channel').listen('MessageSent', (e) => {
-			router.reload({
-				preserveScroll : true,
-				only : ['messages']
-			})
-		})
-	})
+        Echo.private("message-sent-channel." + auth.user.id).listen("MessageSent", (e) => {
+            router.reload({
+                preserveScroll : true,
+                only: ["messages", "users"]
+            })
+        });
+    }, []);
 
 	const renderSidebarScreen = () => {
 		const currentPath = route().current()
